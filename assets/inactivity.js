@@ -16,26 +16,26 @@
     overlay.id  = 'inactivity-overlay';
     overlay.style.cssText = [
         'display:none', 'position:fixed', 'inset:0',
-        'background:rgba(0,0,0,0.6)', 'z-index:9999',
+        'background:rgba(0,0,0,0.75)', 'z-index:9999',
         'align-items:center', 'justify-content:center',
-        'font-family:Inter,sans-serif'
+        'font-family:Inter,sans-serif', 'backdrop-filter:blur(4px)'
     ].join(';');
 
     overlay.innerHTML = [
-        '<div style="background:white;border-radius:16px;padding:36px 32px;',
-        'max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)">',
+        '<div style="background:rgba(11,21,45,0.96);border:1px solid rgba(56,189,248,0.3);border-radius:18px;padding:36px 32px;',
+        'max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.6);color:#f1f5f9">',
         '<div style="font-size:48px;margin-bottom:12px">⏱️</div>',
-        '<h2 style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px">',
+        '<h2 style="font-size:18px;font-weight:700;color:#f8fafc;margin-bottom:8px">',
         'Sesi Hampir Berakhir</h2>',
-        '<p style="color:#6b7280;font-size:14px;margin-bottom:6px;line-height:1.6">',
+        '<p style="color:#94a3b8;font-size:14px;margin-bottom:6px;line-height:1.6">',
         'Tidak ada aktivitas terdeteksi.</p>',
-        '<p style="color:#374151;font-size:14px;margin-bottom:24px">',
+        '<p style="color:#cbd5e1;font-size:14px;margin-bottom:24px">',
         'Anda akan otomatis logout dalam ',
-        '<span id="inact-count" style="font-size:22px;font-weight:800;color:#dc2626">60</span>',
+        '<span id="inact-count" style="font-size:22px;font-weight:800;color:#f87171">60</span>',
         ' detik.</p>',
-        '<button id="inact-stay" style="background:linear-gradient(135deg,#2d6a4f,#40916c);',
+        '<button id="inact-stay" style="background:linear-gradient(135deg,#0284c7,#0ea5e9);',
         'color:white;border:none;padding:12px 28px;border-radius:10px;font-size:15px;',
-        'font-weight:600;cursor:pointer;font-family:inherit">',
+        'font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(14,165,233,0.35)">',
         'Tetap Login</button>',
         '</div>'
     ].join('');

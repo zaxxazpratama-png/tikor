@@ -214,5 +214,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
         <p class="footer-text">&copy; 2026 Support Map System - PT. TALENTA INTEGRITAS NASIONAL</p>
     </div>
+    <script src="assets/cookie_consent.js"></script>
 </body>
 </html>

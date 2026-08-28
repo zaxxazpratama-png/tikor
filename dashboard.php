@@ -653,5 +653,6 @@ setTimeout(sendHeartbeat, 5000);
 setInterval(sendHeartbeat, 120000);
 </script>
 <script src="assets/inactivity.js"></script>
+<script src="assets/cookie_consent.js"></script>
 </body>
 </html>
