@@ -550,8 +550,8 @@ function searchNearby() {
 
             // Render table
             var html = '<table class="tbl"><thead><tr>' +
-                '<th>No</th><th>HomepassID</th><th>Kode Pos</th><th>No Rumah</th>' +
-                '<th>Nama Jalan</th><th>Kelurahan</th><th>Kecamatan</th><th>Kota</th>' +
+                '<th>No</th><th>HomepassID</th><th>Kode Pos</th><th>Nama Jalan</th><th>No Rumah</th>' +
+                '<th>Kelurahan</th><th>Kecamatan</th><th>Kota</th>' +
                 '<th>Tipe Rumah</th><th>Koordinat</th><th>Nama Klaster</th>' +
                 '<th>Status</th><th>Jarak (m)</th><th>Action</th>' +
                 '</tr></thead><tbody>';
@@ -579,8 +579,8 @@ function searchNearby() {
                     '<td>' + (i + 1) + '</td>' +
                     '<td title="' + (r.homepass_id || '') + '">' + (r.homepass_id || '-') + '</td>' +
                     '<td>' + (r.kode_pos || '-') + '</td>' +
-                    '<td>' + (r.no_rumah || '-') + '</td>' +
                     '<td title="' + (r.nama_jalan || '') + '">' + (r.nama_jalan || '-') + '</td>' +
+                    '<td>' + (r.no_rumah || '-') + '</td>' +
                     '<td>' + (r.kelurahan || '-') + '</td>' +
                     '<td>' + (r.kecamatan || '-') + '</td>' +
                     '<td>' + (r.kota || '-') + '</td>' +
