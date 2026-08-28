@@ -1,5 +1,5 @@
-<?php
-require_once '../config/db.php';
+﻿<?php
+require_once dirname(__DIR__) . '/config/db.php';
 header('Content-Type: application/json');
 
 // Session sudah diinisialisasi oleh initMysqlSession() di dalam db.php
