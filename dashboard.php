@@ -608,16 +608,16 @@ function copyTikorData(encodedJson) {
     try {
         var d = JSON.parse(decodeURIComponent(encodedJson));
         var textToCopy = [
-            d.homepass_id,
-            d.kode_pos,
-            d.no_rumah,
-            d.nama_jalan,
-            d.kelurahan,
-            d.kecamatan,
-            d.kota,
-            d.resident_type,
-            d.koordinat
-        ].join('\t');
+            d.homepass_id || '',
+            d.kode_pos || '',
+            d.nama_jalan || '',
+            d.no_rumah || '',
+            d.kelurahan || '',
+            d.kecamatan || '',
+            d.kota || '',
+            d.resident_type || '',
+            d.koordinat || ''
+        ].join('\n');
 
         var onDone = function() {
             showToast('✅ Data disalin: ' + (d.homepass_id || '-') + ' (' + (d.nama_jalan || '-') + ')');
