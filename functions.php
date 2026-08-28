@@ -13,16 +13,25 @@ checkLogin();
     <link rel="icon" type="image/png" href="assets/logo-tin.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f4f6f8; min-height: 100vh; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #070e22 0%, #030712 100%);
+            min-height: 100vh;
+            color: #f1f5f9;
+        }
         .header {
-            background: linear-gradient(135deg, #1a1a2e, #2d3561);
+            background: linear-gradient(135deg, #040817 0%, #0b1836 100%);
             color: white;
             padding: 0 20px;
-            height: 54px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .header-brand {
             font-size: 18px;
@@ -31,56 +40,62 @@ checkLogin();
             display: flex;
             align-items: center;
             gap: 10px;
+            color: #f8fafc;
         }
         .header-logo {
             height: 32px;
             width: auto;
             object-fit: contain;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 3px 8px;
             border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         .header-right { display: flex; align-items: center; gap: 12px; font-size: 14px; }
         .btn-header {
-            background: rgba(255,255,255,0.15);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 5px 14px;
-            border-radius: 6px;
+            background: rgba(255,255,255,0.08);
+            color: #e2e8f0;
+            border: 1px solid rgba(255,255,255,0.18);
+            padding: 6px 14px;
+            border-radius: 8px;
             font-size: 13px;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             text-decoration: none;
             display: inline-block;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
-        .btn-header:hover { background: rgba(255,255,255,0.3); }
-        .page-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .btn-header:hover {
+            background: rgba(14, 165, 233, 0.2);
+            border-color: rgba(56, 189, 248, 0.4);
+            color: white;
+        }
+        .page-container { max-width: 960px; margin: 0 auto; padding: 40px 20px; }
         .page-title {
             font-size: 24px;
             font-weight: 700;
-            color: #1a1a2e;
+            color: #f8fafc;
             margin-bottom: 8px;
         }
-        .page-subtitle { color: #6b7280; font-size: 14px; margin-bottom: 36px; }
+        .page-subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 36px; }
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 20px;
         }
         .func-card {
-            background: white;
+            background: rgba(11, 21, 45, 0.95);
             border-radius: 16px;
             padding: 28px 24px;
             text-decoration: none;
             color: inherit;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            border: 2px solid transparent;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            border: 1px solid rgba(56, 189, 248, 0.2);
             transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
             display: block;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(12px);
         }
         .func-card::before {
             content: '';
@@ -88,17 +103,17 @@ checkLogin();
             top: 0; left: 0; right: 0;
             height: 4px;
         }
-        .func-card.green::before { background: linear-gradient(90deg, #2d6a4f, #40916c); }
-        .func-card.blue::before { background: linear-gradient(90deg, #1e3a8a, #3b82f6); }
+        .func-card.green::before { background: linear-gradient(90deg, #0284c7, #0ea5e9); }
+        .func-card.blue::before { background: linear-gradient(90deg, #2563eb, #38bdf8); }
         .func-card.orange::before { background: linear-gradient(90deg, #c2410c, #f97316); }
         .func-card.purple::before { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
         .func-card.teal::before { background: linear-gradient(90deg, #0f766e, #2dd4bf); }
-        .func-card.red::before { background: linear-gradient(90deg, #991b1b, #f87171); }
-        .func-card.indigo::before { background: linear-gradient(90deg, #312e81, #6366f1); }
+        .func-card.red::before { background: linear-gradient(90deg, #dc2626, #f87171); }
+        .func-card.indigo::before { background: linear-gradient(90deg, #4338ca, #6366f1); }
         .func-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-            border-color: #e5e7eb;
+            transform: translateY(-4px);
+            box-shadow: 0 14px 35px rgba(14, 165, 233, 0.22);
+            border-color: rgba(56, 189, 248, 0.5);
         }
         .func-icon {
             font-size: 36px;
@@ -108,35 +123,37 @@ checkLogin();
         .func-title {
             font-size: 16px;
             font-weight: 700;
-            color: #111827;
+            color: #f8fafc;
             margin-bottom: 6px;
         }
         .func-desc {
             font-size: 13px;
-            color: #6b7280;
+            color: #94a3b8;
             line-height: 1.5;
         }
         .admin-badge {
             display: inline-block;
-            background: #fef3c7;
-            color: #d97706;
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
             font-size: 10px;
             font-weight: 700;
-            padding: 2px 7px;
+            padding: 2px 8px;
             border-radius: 10px;
-            margin-top: 8px;
+            margin-top: 10px;
         }
         .back-link {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: #40916c;
+            color: #38bdf8;
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
             margin-bottom: 24px;
+            transition: color 0.2s;
         }
-        .back-link:hover { text-decoration: underline; }
+        .back-link:hover { color: #7dd3fc; text-decoration: underline; }
     </style>
 </head>
 <body>

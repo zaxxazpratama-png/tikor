@@ -51,66 +51,105 @@ try {
     <link rel="icon" type="image/png" href="assets/logo-tin.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f4f6f8; min-height: 100vh; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #070e22 0%, #030712 100%);
+            min-height: 100vh;
+            color: #f1f5f9;
+        }
         .header {
-            background: linear-gradient(135deg, #7c3aed, #a78bfa);
-            color: white; padding: 0 20px; height: 54px;
+            background: linear-gradient(135deg, #040817 0%, #0b1836 100%);
+            color: white; padding: 0 20px; height: 56px;
             display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
         .header-brand {
             font-size: 18px; font-weight: 700;
             display: flex; align-items: center; gap: 10px;
+            color: #f8fafc;
         }
         .header-logo {
             height: 32px; width: auto; object-fit: contain;
-            background: white; padding: 3px 8px; border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            background: rgba(255, 255, 255, 0.95); padding: 3px 8px; border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         .btn-header {
-            background: rgba(255,255,255,0.15); color: white;
-            border: 1px solid rgba(255,255,255,0.2); padding: 5px 14px;
-            border-radius: 6px; font-size: 13px; text-decoration: none;
+            background: rgba(255,255,255,0.08); color: #e2e8f0;
+            border: 1px solid rgba(255,255,255,0.18); padding: 6px 14px;
+            border-radius: 8px; font-size: 13px; text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-header:hover {
+            background: rgba(14, 165, 233, 0.2);
+            border-color: rgba(56, 189, 248, 0.4);
+            color: white;
         }
         .container { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
-        .back-link { display: inline-flex; align-items: center; gap: 6px; color: #7c3aed; text-decoration: none; font-size: 14px; font-weight: 500; margin-bottom: 24px; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: #38bdf8; text-decoration: none; font-size: 14px; font-weight: 500;
+            margin-bottom: 24px; transition: color 0.2s;
+        }
+        .back-link:hover { color: #7dd3fc; }
         .grid { display: grid; grid-template-columns: 400px 1fr; gap: 24px; }
-        .card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-        .card-title { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 24px; }
+        .card {
+            background: rgba(11, 21, 45, 0.95); border-radius: 16px; padding: 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        .card-title { font-size: 18px; font-weight: 700; color: #f8fafc; margin-bottom: 24px; }
         .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
         .form-control {
-            width: 100%; padding: 11px 14px; border: 2px solid #e5e7eb;
-            border-radius: 10px; font-size: 14px; font-family: 'Inter', sans-serif;
+            width: 100%; padding: 11px 14px; background: #0f1c3a;
+            border: 1.5px solid #1c325c; border-radius: 10px; font-size: 14px;
+            font-family: 'Inter', sans-serif; color: #f8fafc;
             outline: none; transition: border-color 0.2s;
         }
-        .form-control:focus { border-color: #7c3aed; }
+        .form-control:focus {
+            border-color: #0ea5e9; background: #132347;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
+        }
         .role-options { display: flex; gap: 12px; }
         .role-option {
-            flex: 1; border: 2px solid #e5e7eb; border-radius: 10px; padding: 12px;
+            flex: 1; border: 1.5px solid #1c325c; border-radius: 10px; padding: 12px;
             cursor: pointer; transition: all 0.2s; text-align: center;
+            background: #0f1c3a;
         }
         .role-option input { display: none; }
-        .role-option.selected { border-color: #7c3aed; background: #faf5ff; }
+        .role-option.selected {
+            border-color: #0ea5e9; background: rgba(14, 165, 233, 0.15);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.3);
+        }
         .role-option .role-icon { font-size: 24px; display: block; margin-bottom: 4px; }
-        .role-option .role-name { font-size: 13px; font-weight: 600; color: #374151; }
+        .role-option .role-name { font-size: 13px; font-weight: 600; color: #f8fafc; }
         .btn-submit {
-            width: 100%; padding: 13px; background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            width: 100%; padding: 13px; background: linear-gradient(135deg, #0284c7, #0ea5e9);
             color: white; border: none; border-radius: 10px; font-size: 15px;
             font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 4px;
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.35);
+            transition: transform 0.1s, box-shadow 0.2s;
         }
-        .btn-submit:hover { opacity: 0.9; }
+        .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5); }
         .alert { padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; }
-        .alert-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-        .alert-success { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
+        .alert-danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .alert-success { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        thead tr { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white; }
+        thead tr {
+            background: linear-gradient(135deg, #0c1d3f, #132b5b); color: #38bdf8;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+        }
         thead th { padding: 11px 12px; text-align: left; font-weight: 600; }
-        tbody tr { border-bottom: 1px solid #f3f4f6; }
-        tbody tr:hover { background: #faf5ff; }
-        tbody td { padding: 10px 12px; color: #374151; }
+        tbody tr { border-bottom: 1px solid #132347; }
+        tbody tr:hover { background: rgba(14, 165, 233, 0.08); }
+        tbody td { padding: 10px 12px; color: #cbd5e1; }
         .badge { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; }
-        .badge-admin { background: #fef3c7; color: #d97706; }
-        .badge-user { background: #f5f3ff; color: #7c3aed; }
+        .badge-admin { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-user { background: rgba(14, 165, 233, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
