@@ -22,9 +22,10 @@ try {
     if (!$exists) {
         // Session was deleted by admin (force logout) or never registered
         session_destroy();
+        $basePath = getenv('VERCEL') ? '' : '/ALATTEMPUR/TIKORSEMIGOOGLE';
         echo json_encode([
             'status' => 'force_logout',
-            'redirect' => '/ALATTEMPUR/TIKORSEMIGOOGLE/login.php?msg=force_logout'
+            'redirect' => $basePath . '/login.php?msg=force_logout'
         ]);
         exit;
     }
