@@ -73,7 +73,7 @@ try {
         SELECT rd.*, u.username, u.id as uid
         FROM registered_devices rd
         JOIN users u ON u.id = rd.user_id
-        ORDER BY u.username ASC, rd.first_seen ASC
+        ORDER BY u.username ASC, rd.registered_at ASC
     ")->fetchAll();
 
     $sessions = $pdo->query("
@@ -296,10 +296,10 @@ function fmtTime($dt) {
                     <div class="ua-s" title="<?= htmlspecialchars($d['user_agent']??'') ?>"><?= htmlspecialchars(substr($d['user_agent']??'',0,70)) ?></div>
                 </td>
                 <td><?= htmlspecialchars($d['ip_address']??'-') ?></td>
-                <td><?= date('d/m/Y H:i', strtotime($d['first_seen'])) ?></td>
+                <td><?= !empty($d['registered_at']) ? date('d/m/Y H:i', strtotime($d['registered_at'])) : '-' ?></td>
                 <td>
-                    <?= date('d/m/Y H:i', strtotime($d['last_seen'])) ?>
-                    <div style="font-size:11px;color:#9ca3af"><?= fmtTime($d['last_seen']) ?></div>
+                    <?= !empty($d['last_seen']) ? date('d/m/Y H:i', strtotime($d['last_seen'])) : '-' ?>
+                    <div style="font-size:11px;color:#9ca3af"><?= fmtTime($d['last_seen'] ?? null) ?></div>
                 </td>
                 <td>
                     <button class="btn bn-red"
@@ -323,7 +323,7 @@ function fmtTime($dt) {
         <div class="empty">Tidak ada sesi aktif saat ini</div>
         <?php else: ?>
         <table>
-            <thead><tr><th>Username</th><th>IP</th><th>Terakhir Aktif</th><th>Login Sejak</th></tr></thead>
+            <thead><tr><th>Username</th><th>IP</th><th>Terakhir Aktif</th><th>Waktu Sesi</th></tr></thead>
             <tbody>
             <?php foreach ($sessions as $s): ?>
             <tr>
@@ -333,7 +333,7 @@ function fmtTime($dt) {
                     <?= date('H:i:s', strtotime($s['last_activity'])) ?>
                     <div style="font-size:11px;color:#9ca3af"><?= fmtTime($s['last_activity']) ?></div>
                 </td>
-                <td><?= date('d/m/Y H:i', strtotime($s['created_at'])) ?></td>
+                <td><?= !empty($s['created_at']) ? date('d/m/Y H:i', strtotime($s['created_at'])) : date('d/m/Y H:i', strtotime($s['last_activity'])) ?></td>
             </tr>
             <?php endforeach; ?>
             </tbody>
