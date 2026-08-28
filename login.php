@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -15,8 +15,8 @@ $errType  = 'danger';
 $infoMsg  = '';
 
 $urlMsg = $_GET['msg'] ?? '';
-if ($urlMsg === 'force_logout')    $infoMsg = 'âš ï¸ Sesi Anda dihentikan oleh Admin. Silakan login kembali.';
-if ($urlMsg === 'session_expired') $infoMsg = 'â±ï¸ Sesi Anda telah berakhir. Silakan login kembali.';
+if ($urlMsg === 'force_logout')    $infoMsg = 'Sesi Anda telah dihentikan oleh Admin. Silakan login kembali.';
+if ($urlMsg === 'session_expired') $infoMsg = 'Sesi Anda telah berakhir karena tidak ada aktivitas. Silakan login kembali.';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
@@ -112,8 +112,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 64px; height: 64px;
             background: linear-gradient(135deg, #2d6a4f, #40916c);
             border-radius: 16px; display: flex; align-items: center;
-            justify-content: center; margin: 0 auto 16px; font-size: 28px;
+            justify-content: center; margin: 0 auto 16px; color: white;
         }
+        .login-logo .icon svg { width: 32px; height: 32px; }
         .login-logo h1 { font-size: 24px; font-weight: 700; color: #1a1a2e; }
         .login-logo p { color: #6b7280; font-size: 14px; margin-top: 4px; }
         .form-group { margin-bottom: 20px; }
@@ -148,24 +149,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="login-card">
         <div class="login-logo">
-            <div class="icon">ðŸ“</div>
+            <div class="icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                </svg>
+            </div>
             <h1>Support Login</h1>
             <p>TIKOR Support Map System</p>
         </div>
 
         <?php if ($infoMsg): ?>
-        <div class="alert alert-info"><?= htmlspecialchars($infoMsg) ?></div>
+        <div class="alert alert-info">
+            <?= htmlspecialchars($infoMsg) ?>
+        </div>
         <?php endif; ?>
 
         <?php if ($error): ?>
         <div class="alert alert-<?= $errType ?>">
             <?php if ($errType === 'warning'): ?>
-            âš ï¸ <strong>Perangkat Tidak Diizinkan</strong><br>
+            <strong>Peringatan: Perangkat Tidak Diizinkan</strong><br>
             <?= $error ?>
             <div class="device-box">
                 <strong>Perangkat Anda saat ini:</strong><br>
-                ðŸ“± <?= htmlspecialchars(parseDeviceName($_SERVER['HTTP_USER_AGENT'] ?? '')) ?><br>
-                ðŸŒ IP: <?= htmlspecialchars(getUserIP()) ?><br><br>
+                • Perangkat: <?= htmlspecialchars(parseDeviceName($_SERVER['HTTP_USER_AGENT'] ?? '')) ?><br>
+                • IP: <?= htmlspecialchars(getUserIP()) ?><br><br>
                 Hubungi <strong>Admin</strong> untuk mendaftarkan perangkat baru ini.
             </div>
             <?php else: ?>

@@ -88,10 +88,21 @@ function checkDeviceAccess($userId) {
         $ua      = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
         $ip      = getUserIP();
 
-        $stmt = $pdo->prepare("SELECT max_devices FROM users WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT max_devices, role, username FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         $user   = $stmt->fetch();
         $maxDev = $user['max_devices'] ?? 5;
+
+        // Admin selalu diizinkan masuk dari perangkat manapun
+        if (($user['role'] ?? '') === 'admin' || ($user['role'] ?? '') === 'superadmin' || ($user['username'] ?? '') === 'admin') {
+            $newToken = $token ?: bin2hex(random_bytes(32));
+            $devName  = parseDeviceName($ua);
+            $pdo->prepare("INSERT INTO registered_devices (user_id, device_token, device_name, ip_address, user_agent) 
+                VALUES (?, ?, ?, ?, ?) 
+                ON DUPLICATE KEY UPDATE last_seen = NOW(), ip_address = ?")
+                ->execute([$userId, $newToken, $devName, $ip, substr($ua, 0, 500), $ip]);
+            return ['allowed' => true, 'device_token' => $newToken, 'is_new' => empty($token)];
+        }
 
         if ($token) {
             $stmt = $pdo->prepare("SELECT id FROM registered_devices WHERE device_token = ? AND user_id = ?");
