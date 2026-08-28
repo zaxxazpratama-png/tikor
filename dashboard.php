@@ -559,6 +559,22 @@ function searchNearby() {
             results.forEach(function(r, i) {
                 var statusClass = (r.homepass_status || '').toLowerCase() === 'idle' ? 'badge-idle' :
                                   (r.homepass_status || '').toLowerCase() === 'active' ? 'badge-active' : 'badge-default';
+                
+                var coordVal = r.homepassed_koordinat || ((r.lat && r.lng) ? (r.lat + ', ' + r.lng) : '-');
+                
+                var rowData = {
+                    homepass_id: r.homepass_id || '',
+                    kode_pos: r.kode_pos || '',
+                    no_rumah: r.no_rumah || '',
+                    nama_jalan: r.nama_jalan || '',
+                    kelurahan: r.kelurahan || '',
+                    kecamatan: r.kecamatan || '',
+                    kota: r.kota || '',
+                    resident_type: r.resident_type || '',
+                    koordinat: coordVal !== '-' ? coordVal : ''
+                };
+                var encodedData = encodeURIComponent(JSON.stringify(rowData));
+
                 html += '<tr>' +
                     '<td>' + (i + 1) + '</td>' +
                     '<td title="' + (r.homepass_id || '') + '">' + (r.homepass_id || '-') + '</td>' +
@@ -569,11 +585,11 @@ function searchNearby() {
                     '<td>' + (r.kecamatan || '-') + '</td>' +
                     '<td>' + (r.kota || '-') + '</td>' +
                     '<td>' + (r.resident_type || '-') + '</td>' +
-                    '<td><small>' + (r.homepassed_koordinat || '-') + '</small></td>' +
+                    '<td><small>' + coordVal + '</small></td>' +
                     '<td>' + (r.cluster_name || '-') + '</td>' +
                     '<td><span class="badge ' + statusClass + '">' + (r.homepass_status || '-') + '</span></td>' +
                     '<td><strong>' + parseFloat(r.distance_m).toFixed(1) + '</strong></td>' +
-                    '<td><button class="btn-copy" onclick="copyCoord(\'' + (r.homepassed_koordinat || '') + '\')">📋 Copy</button></td>' +
+                    '<td><button class="btn-copy" onclick="copyTikorData(\'' + encodedData + '\')">📋 Copy</button></td>' +
                     '</tr>';
             });
 
@@ -588,18 +604,54 @@ function searchNearby() {
         });
 }
 
-function copyCoord(coord) {
-    navigator.clipboard.writeText(coord).then(() => {
-        showToast('✅ Koordinat disalin: ' + coord);
-    }).catch(() => {
-        var ta = document.createElement('textarea');
-        ta.value = coord;
-        document.body.appendChild(ta);
-        ta.select();
+function copyTikorData(encodedJson) {
+    try {
+        var d = JSON.parse(decodeURIComponent(encodedJson));
+        var textToCopy = [
+            d.homepass_id,
+            d.kode_pos,
+            d.no_rumah,
+            d.nama_jalan,
+            d.kelurahan,
+            d.kecamatan,
+            d.kota,
+            d.resident_type,
+            d.koordinat
+        ].join('\t');
+
+        var onDone = function() {
+            showToast('✅ Data disalin: ' + (d.homepass_id || '-') + ' (' + (d.nama_jalan || '-') + ')');
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(textToCopy).then(onDone).catch(function() {
+                fallbackCopy(textToCopy, onDone);
+            });
+        } else {
+            fallbackCopy(textToCopy, onDone);
+        }
+    } catch (e) {
+        showToast('❌ Gagal memproses data copy');
+    }
+}
+
+function fallbackCopy(text, callback) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '0';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
         document.execCommand('copy');
-        document.body.removeChild(ta);
-        showToast('✅ Koordinat disalin: ' + coord);
-    });
+        if (callback) callback();
+    } catch (err) {
+        showToast('❌ Gagal menyalin');
+    }
+    document.body.removeChild(ta);
 }
 
 function resetMap() {
