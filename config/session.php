@@ -22,7 +22,7 @@ class MysqlSessionHandler implements SessionHandlerInterface
         $this->pdo->exec("
             CREATE TABLE IF NOT EXISTS `php_sessions` (
                 `id`         VARCHAR(128)  NOT NULL PRIMARY KEY,
-                `data`       MEDIUMTEXT    NOT NULL DEFAULT '',
+                `data`       MEDIUMTEXT    NULL,
                 `expires_at` DATETIME      NOT NULL,
                 INDEX idx_expires (`expires_at`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
@@ -43,7 +43,7 @@ class MysqlSessionHandler implements SessionHandlerInterface
         );
         $stmt->execute([$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ? (string) $row['data'] : '';
+        return $row ? (string) ($row['data'] ?? '') : '';
     }
 
     public function write(string $id, string $data): bool
