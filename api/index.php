@@ -2,12 +2,22 @@
 /**
  * Vercel Entry Point Router
  * Semua request dari Vercel masuk ke sini, lalu di-route ke file PHP yang sesuai.
- * Root project (TIKORSEMIGOOGLE/) di-include via path relatif dari folder api/.
  */
+
+// Buffer output agar session_start() tidak konflik dengan HTML output
+ob_start();
 
 // Root project adalah satu level di atas folder api/
 define('APP_ROOT', dirname(__DIR__));
 define('IS_VERCEL', (bool) getenv('VERCEL'));
+
+// Inisialisasi session SEBELUM apapun di-include (sebelum ada output HTML)
+require_once APP_ROOT . '/config/session.php';
+initMysqlSession();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 
 // Ambil path yang diminta (tanpa query string)
 $requestUri  = $_SERVER['REQUEST_URI'] ?? '/';
