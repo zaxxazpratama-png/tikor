@@ -181,7 +181,7 @@ function setRole(role, el) {
 // Set default
 document.querySelector('.role-option input[value="user"]').checked = true;
 </script>
-<script src="/ALATTEMPUR/TIKORSEMIGOOGLE/assets/inactivity.js"></script>
+<script src="assets/inactivity.js"></script>
 </body>
 </html>
 

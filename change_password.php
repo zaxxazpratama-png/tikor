@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 </div>
-<script src="/ALATTEMPUR/TIKORSEMIGOOGLE/assets/inactivity.js"></script>
+<script src="assets/inactivity.js"></script>
 </body>
 </html>
 

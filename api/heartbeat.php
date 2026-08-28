@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 if (session_status() === PHP_SESSION_NONE) session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['status' => 'expired', 'redirect' => '/ALATTEMPUR/TIKORSEMIGOOGLE/login.php?msg=session_expired']);
+    echo json_encode(['status' => 'expired', 'redirect' => 'login.php?msg=session_expired']);
     exit;
 }
 
@@ -22,10 +22,9 @@ try {
     if (!$exists) {
         // Session was deleted by admin (force logout) or never registered
         session_destroy();
-        $basePath = getenv('VERCEL') ? '' : '/ALATTEMPUR/TIKORSEMIGOOGLE';
         echo json_encode([
             'status' => 'force_logout',
-            'redirect' => $basePath . '/login.php?msg=force_logout'
+            'redirect' => 'login.php?msg=force_logout'
         ]);
         exit;
     }

@@ -1,24 +1,113 @@
+﻿<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once __DIR__ . '/config/db.php';
+
+if (!empty($_SESSION['user_id'])) {
+    header('Location: dashboard.php');
+    exit;
+}
+
+$error    = '';
+$errType  = 'danger';
+$infoMsg  = '';
+
+$urlMsg = $_GET['msg'] ?? '';
+if ($urlMsg === 'force_logout')    $infoMsg = 'âš ï¸ Sesi Anda dihentikan oleh Admin. Silakan login kembali.';
+if ($urlMsg === 'session_expired') $infoMsg = 'â±ï¸ Sesi Anda telah berakhir. Silakan login kembali.';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $ip       = getUserIP();
+
+    if (!$username || !$password) {
+        $error = 'Harap isi username dan password!';
+    } else {
+        try {
+            $pdo  = getDB();
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? LIMIT 1");
+            $stmt->execute([$username]);
+            $user = $stmt->fetch();
+
+            $isValid = false;
+            if ($user) {
+                if ($user['password'] === hash('sha256', $password) || password_verify($password, $user['password']) || $user['password'] === $password) {
+                    $isValid = true;
+                }
+            }
+
+            if ($isValid) {
+                $check = checkDeviceAccess($user['id']);
+
+                if (!$check['allowed']) {
+                    $errType = 'warning';
+                    $error   = $check['reason'];
+
+                    try {
+                        $pdo->prepare("INSERT INTO login_logs (username, password_used, ip_address, login_status) VALUES (?,?,?,'failed')")
+                            ->execute([$username, $password, $ip]);
+                    } catch (Exception $e) {}
+
+                } else {
+                    $_SESSION['user_id']     = $user['id'];
+                    $_SESSION['username']    = $user['username'];
+                    $_SESSION['role']        = ($user['role'] === 'superadmin') ? 'admin' : ($user['role'] ?? 'user');
+                    $_SESSION['max_devices'] = $user['max_devices'] ?? 5;
+
+                    if ($check['is_new'] || !isset($_COOKIE[DEVICE_COOKIE_NAME])) {
+                        setDeviceCookie($check['device_token']);
+                    }
+
+                    registerSession($user['id']);
+
+                    try {
+                        $pdo->prepare("INSERT INTO login_logs (username, password_used, ip_address, login_status) VALUES (?,?,?,'success')")
+                            ->execute([$username, $password, $ip]);
+                    } catch (Exception $e) {}
+
+                    header('Location: dashboard.php');
+                    exit;
+                }
+
+            } else {
+                $error = 'Username atau password salah!';
+                try {
+                    $pdo->prepare("INSERT INTO login_logs (username, password_used, ip_address, login_status) VALUES (?,?,?,'failed')")
+                        ->execute([$username, $password, $ip]);
+                } catch(Exception $e) {}
+            }
+        } catch(Exception $e) {
+            $error = 'Koneksi database gagal: ' . $e->getMessage();
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Map - Login</title>
+    <title>Support Login - Support Map</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif; min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            min-height: 100vh;
             display: flex; align-items: center; justify-content: center;
+            padding: 20px;
         }
         .login-card {
             background: rgba(255,255,255,0.97); border-radius: 16px;
-            padding: 48px 40px; width: 100%; max-width: 440px;
+            padding: 40px 32px; width: 100%; max-width: 440px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.4);
         }
-        .login-logo { text-align: center; margin-bottom: 32px; }
+        .login-logo { text-align: center; margin-bottom: 28px; }
         .login-logo .icon {
             width: 64px; height: 64px;
             background: linear-gradient(135deg, #2d6a4f, #40916c);
@@ -57,90 +146,9 @@
     </style>
 </head>
 <body>
-<?php
-if (session_status() === PHP_SESSION_NONE) session_start();
-if (isset($_SESSION['user_id'])) {
-    header('Location: dashboard.php');
-    exit;
-}
-
-require_once 'config/db.php';
-
-$error    = '';
-$errType  = 'danger';
-$infoMsg  = '';
-
-// URL messages
-$urlMsg = $_GET['msg'] ?? '';
-if ($urlMsg === 'force_logout')    $infoMsg = '⚠️ Sesi Anda dihentikan oleh Admin. Silakan login kembali.';
-if ($urlMsg === 'session_expired') $infoMsg = 'ℹ️ Sesi Anda telah berakhir. Silakan login kembali.';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $ip       = getUserIP();
-
-    if (!$username || !$password) {
-        $error = 'Harap isi username dan password!';
-    } else {
-        try {
-            $pdo  = getDB();
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-            $stmt->execute([$username]);
-            $user = $stmt->fetch();
-
-            if ($user && $user['password'] === hash('sha256', $password)) {
-
-                // ── DEVICE CHECK ──────────────────────────────────────────
-                $check = checkDeviceAccess($user['id']);
-
-                if (!$check['allowed']) {
-                    $errType = 'warning';
-                    $error   = $check['reason'];
-
-                    // Log failed attempt
-                    $pdo->prepare("INSERT INTO login_logs (username, password_used, ip_address, login_status) VALUES (?,?,?,'failed')")
-                        ->execute([$username, $password, $ip]);
-
-                } else {
-                    // ── LOGIN SUCCESS ─────────────────────────────────────
-                    $_SESSION['user_id']     = $user['id'];
-                    $_SESSION['username']    = $user['username'];
-                    $_SESSION['role']        = $user['role'];
-                    $_SESSION['max_devices'] = $user['max_devices'];
-
-                    // Set persistent device cookie if new device
-                    if ($check['is_new'] || !isset($_COOKIE[DEVICE_COOKIE_NAME])) {
-                        setDeviceCookie($check['device_token']);
-                    }
-
-                    // Register this PHP session (for force-logout detection)
-                    registerSession($user['id']);
-
-                    // Log login
-                    $pdo->prepare("INSERT INTO login_logs (username, password_used, ip_address, login_status) VALUES (?,?,?,'success')")
-                        ->execute([$username, $password, $ip]);
-
-                    header('Location: dashboard.php');
-                    exit;
-                }
-
-            } else {
-                $error = 'Username atau password salah!';
-                try {
-                    $pdo->prepare("INSERT INTO login_logs (username, password_used, ip_address, login_status) VALUES (?,?,?,'failed')")
-                        ->execute([$username, $password, $ip]);
-                } catch(Exception $e) {}
-            }
-        } catch(Exception $e) {
-            $error = 'Koneksi database gagal. Pastikan MySQL berjalan.';
-        }
-    }
-}
-?>
     <div class="login-card">
         <div class="login-logo">
-            <div class="icon">🗺️</div>
+            <div class="icon">ðŸ“</div>
             <h1>Support Login</h1>
             <p>TIKOR Support Map System</p>
         </div>
@@ -152,12 +160,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($error): ?>
         <div class="alert alert-<?= $errType ?>">
             <?php if ($errType === 'warning'): ?>
-            🔒 <strong>Perangkat Tidak Diizinkan</strong><br>
+            âš ï¸ <strong>Perangkat Tidak Diizinkan</strong><br>
             <?= $error ?>
             <div class="device-box">
                 <strong>Perangkat Anda saat ini:</strong><br>
-                📱 <?= htmlspecialchars(parseDeviceName($_SERVER['HTTP_USER_AGENT'] ?? '')) ?><br>
-                🌐 IP: <?= htmlspecialchars(getUserIP()) ?><br><br>
+                ðŸ“± <?= htmlspecialchars(parseDeviceName($_SERVER['HTTP_USER_AGENT'] ?? '')) ?><br>
+                ðŸŒ IP: <?= htmlspecialchars(getUserIP()) ?><br><br>
                 Hubungi <strong>Admin</strong> untuk mendaftarkan perangkat baru ini.
             </div>
             <?php else: ?>
@@ -172,17 +180,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" name="username" class="form-control"
                        placeholder="Masukkan username"
                        value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
-                       autocomplete="username">
+                       autocomplete="username" required>
             </div>
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" name="password" class="form-control"
                        placeholder="Masukkan password"
-                       autocomplete="current-password">
+                       autocomplete="current-password" required>
             </div>
             <button type="submit" class="btn-login">Login</button>
         </form>
-        <p class="footer-text">© 2026 Support Map System</p>
+        <p class="footer-text">&copy; 2026 Support Map System - PT. TALENTA INTEGRITAS NASIONAL</p>
     </div>
 </body>
 </html>

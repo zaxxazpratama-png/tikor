@@ -151,7 +151,7 @@ try {
     </div>
     <?php endif; ?>
 </div>
-<script src="/ALATTEMPUR/TIKORSEMIGOOGLE/assets/inactivity.js"></script>
+<script src="assets/inactivity.js"></script>
 </body>
 </html>
 

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'config/db.php';
 checkLogin();
 ?>
@@ -536,6 +536,6 @@ function sendHeartbeat() {
 setTimeout(sendHeartbeat, 5000);
 setInterval(sendHeartbeat, 120000);
 </script>
-<script src="/ALATTEMPUR/TIKORSEMIGOOGLE/assets/inactivity.js"></script>
+<script src="assets/inactivity.js"></script>
 </body>
 </html>

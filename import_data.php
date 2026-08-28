@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'config/db.php';
 checkLogin();
 checkAdmin();
@@ -42,14 +42,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['excel_file'])) {
 }
 
 function processXLSX($filePath, $sheetNumber = 2) {
-    // Use Python to process the Excel file
-    $pythonPath = 'C:\\Users\\BLUE I.T COMPUTER\\AppData\\Local\\Programs\\Python\\Python310\\python.exe';
-    $scriptPath = __DIR__ . '/api/read_xlsx.py';
+    // Auto-detect Python binary
+    $candidates = [
+        'C:\\Users\\BLUE I.T COMPUTER\\AppData\\Local\\Programs\\Python\\Python310\\python.exe',
+        'python3',
+        'python',
+        '/usr/bin/python3',
+        '/usr/local/bin/python3'
+    ];
+    $pythonPath = 'python3';
+    foreach ($candidates as $candidate) {
+        if (file_exists($candidate) || (PHP_OS_FAMILY === 'Linux' && is_executable($candidate))) {
+            $pythonPath = $candidate;
+            break;
+        }
+    }
     
-    $cmd = escapeshellarg($pythonPath) . ' ' . escapeshellarg($scriptPath) . ' ' . escapeshellarg($filePath) . ' ' . $sheetNumber . ' 2>&1';
+    $scriptPath = __DIR__ . '/api/read_xlsx.py';
+    $cmd = escapeshellarg($pythonPath) . ' ' . escapeshellarg($scriptPath) . ' ' . escapeshellarg($filePath) . ' ' . (int)$sheetNumber . ' 2>&1';
     $output = shell_exec($cmd);
     
-    if (!$output) return ['error' => 'Gagal membaca file Excel'];
+    if (!$output) return ['error' => 'Gagal membaca file Excel (Python tidak merespons)'];
     
     $data = json_decode($output, true);
     if (!$data) return ['error' => 'Gagal parse data: ' . substr($output, 0, 200)];
@@ -308,7 +321,7 @@ zone.addEventListener('drop', function(e) {
     }
 });
 </script>
-<script src="/ALATTEMPUR/TIKORSEMIGOOGLE/assets/inactivity.js"></script>
+<script src="assets/inactivity.js"></script>
 </body>
 </html>
 

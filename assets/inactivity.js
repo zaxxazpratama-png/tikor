@@ -5,7 +5,7 @@
 (function () {
     var TIMEOUT_MS  = 5 * 60 * 1000;  // 5 minutes
     var WARNING_MS  = 60 * 1000;       // show warning 60s before logout
-    var LOGOUT_URL  = '/ALATTEMPUR/TIKORSEMIGOOGLE/logout.php';
+    var LOGOUT_URL  = 'logout.php';
 
     var inactiveTimer  = null;
     var warningTimer   = null;
