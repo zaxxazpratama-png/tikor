@@ -99,10 +99,10 @@ try {
         }
         .stat-badge span { color: #3b82f6; }
         .table-wrapper {
-            background: white; border-radius: 12px; overflow: auto;
+            background: white; border-radius: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px; }
         thead tr { background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; }
         thead th { padding: 11px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
         tbody tr { border-bottom: 1px solid #f3f4f6; transition: background 0.15s; }
@@ -125,6 +125,15 @@ try {
             background: #3b82f6; color: white; border-color: #3b82f6;
         }
         .empty-msg { text-align: center; padding: 40px; color: #9ca3af; font-size: 15px; }
+
+        @media (max-width: 768px) {
+            .container { padding: 14px; }
+            .header-brand { font-size: 16px; }
+            .btn-header { padding: 4px 10px; font-size: 12px; }
+            .filter-bar input[type="text"], .filter-bar select { width: 100%; }
+            .btn-filter, .btn-reset-filter { width: 100%; text-align: center; }
+            .page-title::after { content: " (geser ↔)"; font-size: 12px; font-weight: normal; color: #3b82f6; }
+        }
     </style>
 </head>
 <body>

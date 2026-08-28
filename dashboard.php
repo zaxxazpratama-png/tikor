@@ -165,13 +165,15 @@ checkLogin();
         .table-wrapper {
             background: white;
             border-radius: 12px;
-            overflow: hidden;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         .tbl {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
+            min-width: 800px;
         }
         .tbl thead tr {
             background: linear-gradient(135deg, #2d6a4f, #40916c);
@@ -260,6 +262,19 @@ checkLogin();
             pointer-events: none;
         }
         .toast.show { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .header-brand { font-size: 16px; }
+            .header-user { display: none; }
+            .btn-header { padding: 4px 10px; font-size: 12px; }
+            .controls-bar { padding: 10px 12px; gap: 8px; }
+            .coord-input { width: 100%; }
+            .radius-select { width: 100%; }
+            .btn-search { width: 100%; }
+            .btn-reset { width: 100%; }
+            .table-section { padding: 12px; }
+            .table-title::after { content: " (geser ↔)"; font-size: 11px; font-weight: normal; color: #40916c; }
+        }
     </style>
 </head>
 <body>

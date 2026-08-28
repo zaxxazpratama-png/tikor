@@ -73,13 +73,13 @@ try {
         .page-title { font-size: 22px; font-weight: 700; color: #111827; }
         .stat { background: white; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #374151; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
         .stat span { color: #0f766e; }
-        .table-wrapper { background: white; border-radius: 12px; overflow: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .table-wrapper { background: white; border-radius: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 650px; }
         thead tr { background: linear-gradient(135deg, #0f766e, #2dd4bf); color: white; }
         thead th { padding: 12px 14px; text-align: left; font-weight: 600; white-space: nowrap; }
         tbody tr { border-bottom: 1px solid #f3f4f6; transition: background 0.15s; }
         tbody tr:hover { background: #f0fdfa; }
-        tbody td { padding: 10px 14px; color: #374151; }
+        tbody td { padding: 10px 14px; color: #374151; white-space: nowrap; }
         .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
         .badge-success { background: #d1fae5; color: #059669; }
         .badge-failed { background: #fee2e2; color: #dc2626; }
@@ -88,6 +88,14 @@ try {
         .page-link:hover, .page-link.active { background: #0f766e; color: white; border-color: #0f766e; }
         .empty-msg { text-align: center; padding: 40px; color: #9ca3af; }
         .back-link { display: inline-flex; align-items: center; gap: 6px; color: #0f766e; text-decoration: none; font-size: 14px; font-weight: 500; margin-bottom: 20px; }
+
+        @media (max-width: 768px) {
+            .container { padding: 14px; }
+            .header-brand { font-size: 16px; }
+            .btn-header, .btn-download { padding: 4px 10px; font-size: 12px; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .page-title::after { content: " (geser ↔)"; font-size: 12px; font-weight: normal; color: #0f766e; }
+        }
     </style>
 </head>
 <body>

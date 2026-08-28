@@ -131,13 +131,20 @@ function fmtTime($dt) {
 
         /* Section */
         .sec-title { font-size:15px; font-weight:700; color:#111827; margin:0 0 12px; }
-        .card { background:white; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.07); margin-bottom:26px; overflow:hidden; }
-        table { width:100%; border-collapse:collapse; font-size:13px; }
+        .card { 
+            background:white; 
+            border-radius:12px; 
+            box-shadow:0 2px 8px rgba(0,0,0,0.07); 
+            margin-bottom:26px; 
+            overflow-x:auto; 
+            -webkit-overflow-scrolling:touch; 
+        }
+        table { width:100%; border-collapse:collapse; font-size:13px; min-width:760px; }
         thead tr { background:linear-gradient(135deg,#312e81,#6366f1); color:white; }
         thead th { padding:11px 14px; text-align:left; font-weight:600; white-space:nowrap; }
         tbody tr { border-bottom:1px solid #f3f4f6; transition:background .15s; }
         tbody tr:hover { background:#f5f3ff; }
-        tbody td { padding:10px 14px; color:#374151; vertical-align:middle; }
+        tbody td { padding:10px 14px; color:#374151; vertical-align:middle; white-space:nowrap; }
         .badge { display:inline-block; padding:2px 9px; border-radius:12px; font-size:11px; font-weight:700; }
         .b-green { background:#d1fae5; color:#059669; }
         .b-red   { background:#fee2e2; color:#dc2626; }
@@ -177,6 +184,16 @@ function fmtTime($dt) {
         .modal-msg { font-size:14px; text-align:center; color:#6b7280; margin-bottom:24px; line-height:1.6; }
         .modal-btns { display:flex; gap:10px; justify-content:center; }
         .modal-btns .btn { padding:10px 24px; font-size:14px; border-radius:8px; }
+
+        @media (max-width: 768px) {
+            .wrap { padding: 16px 12px; }
+            .stats { gap: 8px; margin-bottom: 20px; }
+            .sc { min-width: calc(50% - 4px); padding: 12px 14px; }
+            .sc .n { font-size: 22px; }
+            .btn-hdr { padding: 4px 10px; font-size: 12px; }
+            .sec-title { font-size: 14px; }
+            .sec-title::after { content: " (geser ↔)"; font-size: 11px; font-weight: normal; color: #6366f1; }
+        }
     </style>
 </head>
 <body>
