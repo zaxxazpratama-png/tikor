@@ -1,8 +1,8 @@
 <?php
-// Start session FIRST so session_id() is valid
+require_once 'config/db.php';
+// Session sudah diinisialisasi oleh initMysqlSession() di dalam db.php
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-require_once 'config/db.php';
 
 // Remove active session from DB
 removeSession();

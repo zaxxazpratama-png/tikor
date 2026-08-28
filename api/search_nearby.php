@@ -2,7 +2,8 @@
 require_once '../config/db.php';
 header('Content-Type: application/json');
 
-session_start();
+// Session sudah diinisialisasi oleh initMysqlSession() di dalam db.php
+if (session_status() === PHP_SESSION_NONE) session_start();
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'Unauthorized']);
     exit;

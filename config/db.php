@@ -1,10 +1,16 @@
 <?php
-// Database Configuration
-define('DB_HOST', '127.0.0.1');
-define('DB_PORT', '3306');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'support_map_db');
+// ─── Session Handler (MySQL-based untuk Vercel serverless) ───────────────────
+require_once __DIR__ . '/session.php';
+initMysqlSession();
+
+// ─── Database Configuration ───────────────────────────────────────────────────
+// Lokal (XAMPP): nilai default digunakan
+// Vercel (prod): set via Environment Variables di Vercel Dashboard
+define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1');
+define('DB_PORT', getenv('DB_PORT') ?: '3306');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
+define('DB_NAME', getenv('DB_NAME') ?: 'support_map_db');
 
 // Session timeout: 5 minutes of inactivity
 define('SESSION_TIMEOUT', 300);
@@ -142,7 +148,8 @@ function checkDeviceAccess($userId) {
 function checkLogin() {
     if (session_status() === PHP_SESSION_NONE) session_start();
     if (!isset($_SESSION['user_id'])) {
-        header('Location: /ALATTEMPUR/TIKORSEMIGOOGLE/login.php');
+        $basePath = getenv('VERCEL') ? '' : '/ALATTEMPUR/TIKORSEMIGOOGLE';
+        header('Location: ' . $basePath . '/login.php');
         exit;
     }
 
@@ -154,7 +161,8 @@ function checkLogin() {
         $stmt->execute([$token]);
         if (!$stmt->fetch()) {
             session_destroy();
-            header('Location: /ALATTEMPUR/TIKORSEMIGOOGLE/login.php?msg=force_logout');
+            $basePath = getenv('VERCEL') ? '' : '/ALATTEMPUR/TIKORSEMIGOOGLE';
+            header('Location: ' . $basePath . '/login.php?msg=force_logout');
             exit;
         }
     } catch (Exception $e) {
@@ -166,7 +174,8 @@ function checkLogin() {
 
 function checkAdmin() {
     if ($_SESSION['role'] !== 'admin') {
-        header('Location: /ALATTEMPUR/TIKORSEMIGOOGLE/dashboard.php?error=akses_ditolak');
+        $basePath = getenv('VERCEL') ? '' : '/ALATTEMPUR/TIKORSEMIGOOGLE';
+        header('Location: ' . $basePath . '/dashboard.php?error=akses_ditolak');
         exit;
     }
 }
