@@ -93,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Support Login - Support Map</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/logo-tin.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -108,15 +109,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-shadow: 0 25px 50px rgba(0,0,0,0.4);
         }
         .login-logo { text-align: center; margin-bottom: 28px; }
-        .login-logo .icon {
-            width: 64px; height: 64px;
-            background: linear-gradient(135deg, #2d6a4f, #40916c);
-            border-radius: 16px; display: flex; align-items: center;
-            justify-content: center; margin: 0 auto 16px; color: white;
+        .login-logo .logo-img {
+            max-width: 140px; max-height: 75px;
+            object-fit: contain; display: block;
+            margin: 0 auto 16px;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08));
         }
-        .login-logo .icon svg { width: 32px; height: 32px; }
-        .login-logo h1 { font-size: 24px; font-weight: 700; color: #1a1a2e; }
-        .login-logo p { color: #6b7280; font-size: 14px; margin-top: 4px; }
+        .login-logo h1 { font-size: 20px; font-weight: 700; color: #1a1a2e; }
+        .login-logo p { color: #6b7280; font-size: 13px; margin-top: 4px; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
         .form-control {
@@ -149,15 +149,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="login-card">
         <div class="login-logo">
-            <div class="icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-                    <line x1="8" y1="2" x2="8" y2="18"></line>
-                    <line x1="16" y1="6" x2="16" y2="22"></line>
-                </svg>
-            </div>
-            <h1>Support Login</h1>
-            <p>TIKOR Support Map System</p>
+            <img src="assets/logo-tin.png" alt="PT. TALENTA INTEGRITAS NASIONAL" class="logo-img">
+            <h1>PT. TALENTA INTEGRITAS NASIONAL</h1>
+            <p>Support Map System</p>
         </div>
 
         <?php if ($infoMsg): ?>

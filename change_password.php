@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ganti Password - Support Map</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/logo-tin.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f4f6f8; min-height: 100vh; }
@@ -52,7 +53,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: white; padding: 0 20px; height: 54px;
             display: flex; align-items: center; justify-content: space-between;
         }
-        .header-brand { font-size: 18px; font-weight: 700; }
+        .header-brand {
+            font-size: 18px; font-weight: 700;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .header-logo {
+            height: 32px; width: auto; object-fit: contain;
+            background: white; padding: 3px 8px; border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
         .btn-header {
             background: rgba(255,255,255,0.15); color: white;
             border: 1px solid rgba(255,255,255,0.2); padding: 5px 14px;
@@ -93,7 +102,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="header">
-    <div class="header-brand">🔐 Ganti Password</div>
+    <div class="header-brand">
+        <img src="assets/logo-tin.png" alt="PT. TIN" class="header-logo">
+        <span>Ganti Password</span>
+    </div>
     <a href="functions.php" class="btn-header">← Kembali</a>
 </div>
 

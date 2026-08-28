@@ -104,6 +104,7 @@ function fmtTime($dt) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Device - Support Map</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/logo-tin.png">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Inter',sans-serif; background:#f4f6f8; }
@@ -113,7 +114,15 @@ function fmtTime($dt) {
             display:flex; align-items:center; justify-content:space-between;
             position:sticky; top:0; z-index:200;
         }
-        .header-brand { font-size:18px; font-weight:700; }
+        .header-brand {
+            font-size:18px; font-weight:700;
+            display:flex; align-items:center; gap:10px;
+        }
+        .header-logo {
+            height:32px; width:auto; object-fit:contain;
+            background:white; padding:3px 8px; border-radius:6px;
+            box-shadow:0 2px 4px rgba(0,0,0,0.15);
+        }
         .btn-hdr { background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.25); padding:5px 14px; border-radius:6px; font-size:13px; text-decoration:none; }
         .wrap { max-width:1300px; margin:0 auto; padding:26px 20px; }
         .back { color:#6366f1; text-decoration:none; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:6px; margin-bottom:18px; }
@@ -198,7 +207,10 @@ function fmtTime($dt) {
 </head>
 <body>
 <div class="header">
-    <div class="header-brand">🖥️ Kelola Perangkat</div>
+    <div class="header-brand">
+        <img src="assets/logo-tin.png" alt="PT. TIN" class="header-logo">
+        <span>Kelola Perangkat</span>
+    </div>
     <a href="functions.php" class="btn-hdr">← Kembali</a>
 </div>
 

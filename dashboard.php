@@ -10,6 +10,7 @@ checkLogin();
     <title>SUPPORT MAP - Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/logo-tin.png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,12 +31,21 @@ checkLogin();
             z-index: 1000;
         }
         .header-brand {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+        }
+        .header-logo {
+            height: 32px;
+            width: auto;
+            object-fit: contain;
+            background: white;
+            padding: 3px 8px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
         .header-right {
             display: flex;
@@ -282,7 +292,8 @@ checkLogin();
 <!-- Header -->
 <div class="header">
     <div class="header-brand">
-        🗺️ SUPPORT MAP
+        <img src="assets/logo-tin.png" alt="PT. TIN" class="header-logo">
+        <span>SUPPORT MAP</span>
     </div>
     <div class="header-right">
         <span class="header-user">👤 <?= htmlspecialchars($_SESSION['username']) ?></span>
@@ -353,19 +364,27 @@ var tikorIcon = L.divIcon({
     className: ''
 });
 
-var centerIcon = L.divIcon({
-    html: '<div style="background:#dc2626;width:20px;height:20px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.4)"></div>',
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-    className: ''
+// Custom Blue Pin for search center
+var bluePinIcon = L.divIcon({
+    className: 'custom-blue-pin',
+    html: '<div style="position:relative; display:flex; flex-direction:column; align-items:center;">' +
+          '<div style="background:#1d4ed8; color:white; font-size:10px; font-weight:700; padding:2px 7px; border-radius:4px; margin-bottom:2px; white-space:nowrap; box-shadow:0 2px 5px rgba(0,0,0,0.3); border:1px solid #93c5fa;">Titik Pencarian</div>' +
+          '<svg width="28" height="38" viewBox="0 0 28 38" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35));">' +
+          '<path d="M14 0C6.268 0 0 6.268 0 14C0 24.5 14 38 14 38C14 38 28 24.5 28 14C28 6.268 21.732 0 14 0Z" fill="#1D4ED8"/>' +
+          '<path d="M14 1.5C7.096 1.5 1.5 7.096 1.5 14C1.5 23.3 14 35.5 14 35.5C14 35.5 26.5 23.3 26.5 14C26.5 7.096 20.904 1.5 14 1.5Z" fill="#2563EB"/>' +
+          '<circle cx="14" cy="13" r="5" fill="white"/>' +
+          '</svg></div>',
+    iconSize: [90, 58],
+    iconAnchor: [45, 58],
+    popupAnchor: [0, -58]
 });
 
-// Click on map to get coordinates
+// Click on map to get coordinates & automatically search in real-time
 map.on('click', function(e) {
     var lat = e.latlng.lat.toFixed(8);
     var lng = e.latlng.lng.toFixed(8);
     document.getElementById('coord-input').value = lat + ', ' + lng;
-    showToast('📍 Koordinat dipilih: ' + lat + ', ' + lng);
+    searchNearby();
 });
 
 function clearMarkers() {
@@ -380,7 +399,7 @@ function searchNearby() {
     var radius = document.getElementById('radius-select').value;
 
     if (!coordVal) {
-        showToast('⚠️ Masukkan koordinat terlebih dahulu!');
+        showToast('⚠️ Klik pada peta atau masukkan koordinat terlebih dahulu!');
         return;
     }
 
@@ -405,21 +424,38 @@ function searchNearby() {
     document.getElementById('result-count').textContent = 'Mencari...';
     document.getElementById('btn-find').disabled = true;
 
-    // Center marker
-    centerMarker = L.marker([lat, lng], { icon: centerIcon }).addTo(map);
+    // Center marker (Blue Pin)
+    centerMarker = L.marker([lat, lng], { 
+        icon: bluePinIcon,
+        draggable: true 
+    }).addTo(map);
+
     centerMarker.bindPopup('<b>📍 Titik Pencarian</b><br>' + lat.toFixed(6) + ', ' + lng.toFixed(6)).openPopup();
     
-    // Radius circle
+    // Draggable blue pin updates coordinates & triggers search in real time
+    centerMarker.on('dragend', function(ev) {
+        var pos = ev.target.getLatLng();
+        var newLat = pos.lat.toFixed(8);
+        var newLng = pos.lng.toFixed(8);
+        document.getElementById('coord-input').value = newLat + ', ' + newLng;
+        searchNearby();
+    });
+
+    // Radius circle (Blue style)
     radiusCircle = L.circle([lat, lng], {
         radius: parseInt(radius),
-        color: '#dc2626',
-        fillColor: '#dc2626',
-        fillOpacity: 0.08,
+        color: '#2563eb',
+        fillColor: '#3b82f6',
+        fillOpacity: 0.12,
         weight: 2,
         dashArray: '5, 5'
     }).addTo(map);
 
-    map.setView([lat, lng], 18);
+    if (map.getZoom() < 17) {
+        map.setView([lat, lng], 18);
+    } else {
+        map.panTo([lat, lng]);
+    }
 
     // API call
     fetch('api/search_nearby.php?lat=' + lat + '&lng=' + lng + '&radius=' + radius)
@@ -512,7 +548,7 @@ function copyCoord(coord) {
 function resetMap() {
     clearMarkers();
     document.getElementById('coord-input').value = '';
-    document.getElementById('table-content').innerHTML = '<div class="empty-state"><div class="icon">🔍</div><p>Masukkan koordinat dan klik <strong>Find Nearby Points</strong> untuk mencari tikor terdekat</p></div>';
+    document.getElementById('table-content').innerHTML = '<div class="empty-state"><div class="icon">🔍</div><p>Klik di peta atau masukkan koordinat untuk mencari tikor terdekat secara realtime</p></div>';
     document.getElementById('result-count').textContent = 'Belum ada pencarian';
     map.setView([-6.2088, 106.8456], 10);
 }
@@ -529,6 +565,14 @@ function showToast(msg) {
 // Enter key trigger search
 document.getElementById('coord-input').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') searchNearby();
+});
+
+// Auto search on radius change if coordinates already set
+document.getElementById('radius-select').addEventListener('change', function() {
+    var coordVal = document.getElementById('coord-input').value.trim();
+    if (coordVal) {
+        searchNearby();
+    }
 });
 
 // ===== HEARTBEAT - Keep session alive & detect force logout =====

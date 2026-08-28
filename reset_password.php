@@ -45,6 +45,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password - Support Map</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/logo-tin.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f4f6f8; min-height: 100vh; }
@@ -53,7 +54,15 @@ try {
             color: white; padding: 0 20px; height: 54px;
             display: flex; align-items: center; justify-content: space-between;
         }
-        .header-brand { font-size: 18px; font-weight: 700; }
+        .header-brand {
+            font-size: 18px; font-weight: 700;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .header-logo {
+            height: 32px; width: auto; object-fit: contain;
+            background: white; padding: 3px 8px; border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
         .btn-header { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 5px 14px; border-radius: 6px; font-size: 13px; text-decoration: none; }
         .container { max-width: 600px; margin: 50px auto; padding: 0 20px; }
         .back-link { display: inline-flex; align-items: center; gap: 6px; color: #ef4444; text-decoration: none; font-size: 14px; font-weight: 500; margin-bottom: 24px; }
@@ -78,7 +87,10 @@ try {
 </head>
 <body>
 <div class="header">
-    <div class="header-brand">🔄 Reset Password</div>
+    <div class="header-brand">
+        <img src="assets/logo-tin.png" alt="PT. TIN" class="header-logo">
+        <span>Reset Password</span>
+    </div>
     <a href="functions.php" class="btn-header">← Kembali</a>
 </div>
 

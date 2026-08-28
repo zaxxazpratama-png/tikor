@@ -10,6 +10,7 @@ checkLogin();
     <title>Fungsi Lainnya - Support Map</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/logo-tin.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f4f6f8; min-height: 100vh; }
@@ -23,7 +24,23 @@ checkLogin();
             justify-content: space-between;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        .header-brand { font-size: 18px; font-weight: 700; letter-spacing: 1px; }
+        .header-brand {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-logo {
+            height: 32px;
+            width: auto;
+            object-fit: contain;
+            background: white;
+            padding: 3px 8px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
         .header-right { display: flex; align-items: center; gap: 12px; font-size: 14px; }
         .btn-header {
             background: rgba(255,255,255,0.15);
@@ -124,7 +141,10 @@ checkLogin();
 </head>
 <body>
 <div class="header">
-    <div class="header-brand">⚙️ FUNGSI LAINNYA</div>
+    <div class="header-brand">
+        <img src="assets/logo-tin.png" alt="PT. TIN" class="header-logo">
+        <span>FUNGSI LAINNYA</span>
+    </div>
     <div class="header-right">
         <span style="background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:20px;font-size:13px;">
             👤 <?= htmlspecialchars($_SESSION['username']) ?>
